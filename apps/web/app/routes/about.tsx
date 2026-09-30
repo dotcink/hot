@@ -4,6 +4,7 @@ import type { SiteStats } from "@aihot/contracts/site";
 import { apiGet } from "../lib/api.server";
 import { shortSourceName } from "../lib/format";
 import { ABOUT, SITE, withSubject } from "@aihot/industry/site";
+import { DISABLED_PAGES } from "@aihot/industry/features";
 import { organizationLd, pageMeta } from "../lib/seo";
 import { Kicker } from "../components/ui/Kicker";
 import { buttonClass } from "../components/ui/Controls";
@@ -155,7 +156,7 @@ function Maker({ maker, contact }: { maker: NonNullable<typeof ABOUT.maker>; con
           {maker.greeting.map((line) => (
             <p key={line}>{line}</p>
           ))}
-          <p className="text-ink-3">
+          {!DISABLED_PAGES.includes("/changelog") && !DISABLED_PAGES.includes("/feedback") && <p className="text-ink-3">
             它一直在改，改了什么都写在
             <Link to="/changelog" className="text-accent hover:underline">
               更新日志
@@ -165,7 +166,7 @@ function Maker({ maker, contact }: { maker: NonNullable<typeof ABOUT.maker>; con
               反馈页
             </Link>
             告诉我。
-          </p>
+          </p>}
         </div>
       </div>
       {codes.length > 0 && (
@@ -271,13 +272,13 @@ export default function AboutPage() {
 
       {ABOUT.maker && <Maker maker={ABOUT.maker} contact={contact} />}
 
-      <p className="mt-16 well rounded-card px-5 py-4 text-[13px] leading-[1.85] text-ink-3">
+      {!DISABLED_PAGES.includes("/feedback") && <p className="mt-16 well rounded-card px-5 py-4 text-[13px] leading-[1.85] text-ink-3">
         {ABOUT.copyright}
         <Link to="/feedback" className="text-accent hover:underline">
           反馈页
         </Link>
         联系我们。
-      </p>
+      </p>}
 
       <footer className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-[12.5px] text-ink-4">
         <span>{SITE.footerNote}</span>

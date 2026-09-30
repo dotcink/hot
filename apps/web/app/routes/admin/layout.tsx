@@ -1,4 +1,4 @@
-import { FEATURES } from "@aihot/industry/features";
+import { DISABLED_PAGES, FEATURES } from "@aihot/industry/features";
 import { SITE } from "@aihot/industry/site";
 import { motion } from "motion/react";
 import { NavLink, Outlet, useLocation, useNavigation, type ShouldRevalidateFunction } from "react-router";
@@ -65,7 +65,8 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
   const { me, counts } = loaderData;
   const navigation = useNavigation();
   const location = useLocation();
-  const flat = NAV.flatMap((g) => g.items);
+  const nav = NAV.map((g) => ({ ...g, items: g.items.filter((i) => !DISABLED_PAGES.includes(i.to)) }));
+  const flat = nav.flatMap((g) => g.items);
   return (
     <div className="flex min-h-dvh bg-bg">
       <NavigationProgress active={navigation.state === "loading"} />
@@ -75,7 +76,7 @@ export default function AdminLayout({ loaderData }: Route.ComponentProps) {
           <span className="text-[15px] font-semibold tracking-tight text-ink">{SITE.name} 后台</span>
         </a>
         <nav className="flex-1 space-y-4 overflow-y-auto">
-          {NAV.map((g) => (
+          {nav.map((g) => (
             <div key={g.group}>
               <div className="mb-1 px-3 text-[11.5px] font-medium tracking-wide text-ink-4">{g.group}</div>
               <div className="space-y-0.5">

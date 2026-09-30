@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router";
+import { DISABLED_PAGES } from "@aihot/industry/features";
 import type { CopyDocument, RenderedCopy } from "../../lib/markdown";
 import { ArticleLayout, RailSection } from "../../components/ui/Page";
 
@@ -75,7 +76,7 @@ export function CopyPage({ doc, rendered, eyebrow, footer, aside }: { doc: CopyD
 export function LegalFooterLinks({ links, note }: { links: Array<{ to: string; label: string; id?: string }>; note?: string }) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-      {links.map((l) => (
+      {links.filter((l) => !DISABLED_PAGES.includes(l.to)).map((l) => (
         <Link key={l.to} id={l.id} to={l.to} className="text-accent hover:underline">{l.label}</Link>
       ))}
       {note && <span className="text-ink-4">{note}</span>}

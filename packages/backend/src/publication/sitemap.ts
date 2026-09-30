@@ -2,7 +2,7 @@
 // the latest 500 stories, leaderboard pages and indexable items. Cached ~5 minutes and rebuilt in the
 // background after that (crawlers get the previous copy meanwhile); if the database fails, the last
 // successful sitemap is served (never an empty one). Bounded.
-import { FEATURES } from "@aihot/industry/features";
+import { DISABLED_PAGES, FEATURES } from "@aihot/industry/features";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { config } from "../config.ts";
@@ -82,6 +82,7 @@ async function build(): Promise<string> {
   for (const it of items) entries.push({ loc: `/items/${it.id}`, lastmod: it.t, changefreq: "monthly", priority: 0.5 });
 
   const body = entries
+    .filter((e) => !DISABLED_PAGES.includes(e.loc))
     .slice(0, MAX_URLS)
     .map((e) => {
       const parts = [`<loc>${escapeXml(siteUrl(e.loc))}</loc>`];

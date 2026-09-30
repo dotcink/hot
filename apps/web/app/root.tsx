@@ -1,5 +1,6 @@
 import { titled } from "./lib/seo";
 import { SITE } from "@aihot/industry/site";
+import { DISABLED_PAGES, FEATURES } from "@aihot/industry/features";
 import {
   isRouteErrorResponse, Link, Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData, useLocation, useNavigation, useRouteError, useRouteLoaderData,
   type ShouldRevalidateFunction,
@@ -27,6 +28,16 @@ export const links: Route.LinksFunction = () => [
 interface SiteMeta {
   changelogVersion: string | null;
 }
+
+// Stop disabled pages before any matched loader can call the API, including direct links.
+export const middleware: Route.MiddlewareFunction[] = [({ request }) => {
+  const pathname = decodeURIComponent(new URL(request.url).pathname).replace(/\.data$/, "").toLowerCase();
+  if ((!FEATURES.leaderboard && /^\/leaderboard(?:\/|$)/i.test(pathname))
+    || (!FEATURES.codexResetMonitor && /^\/(?:codex-reset|admin\/monitor)(?:\/|$)/i.test(pathname))
+    || DISABLED_PAGES.some((page) => pathname === page || pathname.startsWith(`${page}/`))) {
+    throw new Response(null, { status: 404 });
+  }
+}];
 
 export async function loader({ request }: Route.LoaderArgs) {
   try {

@@ -1,6 +1,6 @@
 // Site navigation, one place for the desktop sidebar, the mobile tab bar and the mobile "更多" page.
 import { withSubject } from "@aihot/industry/site";
-import { FEATURES } from "@aihot/industry/features";
+import { DISABLED_PAGES, FEATURES } from "@aihot/industry/features";
 import type { ReactNode } from "react";
 import {
   IconApps, IconBolt, IconBookmark, IconChart, IconDoc, IconFlame, IconGrid, IconHeart, IconHistory, IconList, IconMessage, IconPlug,
@@ -49,13 +49,13 @@ export const SIDEBAR: Array<{ title: string; items: NavItem[] }> = [
       { to: "/feedback", label: "反馈", icon: IconMessage },
     ],
   },
-];
+].map((group) => ({ ...group, items: group.items.filter((item) => !DISABLED_PAGES.includes(item.to)) }));
 
 export const TABBAR: NavItem[] = [
   { to: "/", label: "精选", icon: IconBolt, end: true },
   { to: "/all", label: "全部", icon: IconList },
   { to: "/daily", label: "日报", icon: IconDoc },
-  { to: "/more", label: "更多", icon: IconApps, changelog: true },
+  { to: "/more", label: "更多", icon: IconApps, changelog: !DISABLED_PAGES.includes("/changelog") },
 ];
 
 /** Pages reached from the mobile "更多" tab keep that tab highlighted. */

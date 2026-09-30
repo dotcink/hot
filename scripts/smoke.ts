@@ -2,7 +2,7 @@
 // deploy, and CI's check of the built site on an empty database.
 //   node scripts/smoke.ts [--base http://localhost:3000]
 import { SITE } from "@aihot/industry/site";
-import { FEATURES } from "@aihot/industry/features";
+import { DISABLED_PAGES, FEATURES } from "@aihot/industry/features";
 
 const at = process.argv.indexOf("--base");
 const base = (at > 0 ? process.argv[at + 1] : process.env.SITE_URL) ?? "http://localhost:3000";
@@ -39,7 +39,9 @@ async function check(path: string, expect: (res: Response, body: string) => stri
       console.log(`– ${path}  no leaderboard round published yet`);
       return;
     }
-    const problem = res.status !== 200 ? `HTTP ${res.status}` : expect(res, body);
+    const problem = DISABLED_PAGES.includes(path)
+      ? (res.status === 404 ? null : `HTTP ${res.status}, expected 404`)
+      : res.status !== 200 ? `HTTP ${res.status}` : expect(res, body);
     console.log(`${problem ? "✗" : "✓"} ${path}${problem ? `  ${problem}` : ""}`);
     if (problem) failed += 1;
   } catch (error) {

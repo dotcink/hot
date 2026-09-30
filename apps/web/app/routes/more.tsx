@@ -1,5 +1,5 @@
 import { SITE } from "@aihot/industry/site";
-import { FEATURES } from "@aihot/industry/features";
+import { DISABLED_PAGES, FEATURES } from "@aihot/industry/features";
 import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { pageMeta } from "../lib/seo";
@@ -60,7 +60,7 @@ export default function MorePage() {
       <div className="space-y-3 lg:grid lg:grid-cols-2 lg:items-start lg:gap-4 lg:space-y-0 2xl:grid-cols-3">
         {GROUPS.map((g) => (
           <Group key={g.title} title={g.title}>
-            {g.rows.map((r) => (
+            {g.rows.filter((r) => !DISABLED_PAGES.includes(r.to)).map((r) => (
               <li key={r.to}>
                 <Link to={r.to} className="flex h-[50px] items-center gap-3 px-4 text-[15px] font-medium text-ink transition-colors active:bg-bg-sunk lg:hover:bg-bg-sunk">
                   <span className="text-ink-3">{r.icon}</span>

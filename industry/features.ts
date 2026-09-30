@@ -3,7 +3,10 @@
 
 export const FEATURES = {
   /** 模型榜：汇总公开评测，按公开方法 v15 计算共识排名（/leaderboard）。每天抓 4 次评测来源。 */
-  leaderboard: true,
+  leaderboard: false,
   /** Codex 重置监控：盯 OpenAI Codex 负责人在 X 上的额度重置公告（/codex-reset）。需要 SocialData。 */
-  codexResetMonitor: true,
+  codexResetMonitor: false,
 } as const;
+
+// 暂停开放的页面：隐藏入口并在页面加载前返回 404；恢复时移除对应路径。
+export const DISABLED_PAGES: readonly string[] = ["/feedback", "/changelog", "/agent", "/admin/feedback"];
